@@ -1,0 +1,1 @@
+# ghostmethod_rb
