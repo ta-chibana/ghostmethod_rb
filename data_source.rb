@@ -1,51 +1,51 @@
 require 'pg'
 
 class DataSource
-  def get_food_name(id)
-    result = get_data('foods', 'name', id)
-    return_data(result, 'name')
+  def fetch_food_name(id)
+    pg_result = fetch_data!('foods', 'name', id)
+    return_data(pg_result, 'name')
   end
 
-  def get_food_price(id)
-    result = get_data('foods', 'price', id)
-    return_data(result, 'price')
+  def fetch_food_price(id)
+    pg_result = fetch_data!('foods', 'price', id)
+    return_data(pg_result, 'price')
   end
 
-  def get_book_name(id)
-    result = get_data('books', 'name', id)
-    return_data(result, 'name')
+  def fetch_book_name(id)
+    pg_result = fetch_data!('books', 'name', id)
+    return_data(pg_result, 'name')
   end
 
-  def get_book_price(id)
-    result = get_data('books', 'price', id)
-    return_data(result, 'price')
+  def fetch_book_price(id)
+    pg_result = fetch_data!('books', 'price', id)
+    return_data(pg_result, 'price')
   end
 
-  #  def get_onigiri_name(id)
-  #    result = get_data('onigiris', 'name', id)
-  #    return_data(result, 'name')
+  #  def fetch_onigiri_name(id)
+  #    pg_result = fetch_data!('onigiris', 'name', id)
+  #    return_data(pg_result, 'name')
   #  end
   #
-  #  def get_onigiri_price(id)
-  #    result = get_data('onigiris', 'price', id)
-  #    return_data(result, 'price')
+  #  def fetch_onigiri_price(id)
+  #    pg_result = fetch_data!('onigiris', 'price', id)
+  #    return_data(pg_result, 'price')
   #  end
 
   private
-  def get_data(table_name, column, id)
+  def fetch_data!(table_name, column_name, id)
     connection = PG::connect(host: 'localhost', 
                              user: 'postgres', 
                              password: 'postgres', 
                              dbname: 'metapro_demo', 
                              port: '5432')
-    result = connection.exec("select #{column} from #{table_name} where id = #{id}")
+    pg_result = connection.exec("select #{column_name} from #{table_name} where id = #{id}")
   ensure
     connection.finish
-    result
+    pg_result
   end
 
-  def return_data(data, column)
-    data.first[column] if present?(data)
+  def return_data(data, column_name)
+    data.first[column_name] if present?(data)
   end
 
   def present?(data)
