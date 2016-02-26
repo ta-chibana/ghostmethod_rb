@@ -7,13 +7,13 @@ class Product
   end
 
   def food_detail
-    name = @data_source.fetch_food_name(@id)
+    name  = @data_source.fetch_food_name(@id)
     price = @data_source.fetch_food_price(@id)
     detail(name, price)
   end
 
   def book_detail
-    name = @data_source.fetch_book_name(@id)
+    name  = @data_source.fetch_book_name(@id)
     price = @data_source.fetch_book_price(@id)
     detail(name, price)
   end
