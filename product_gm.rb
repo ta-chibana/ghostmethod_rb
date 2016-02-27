@@ -1,4 +1,4 @@
-require './data_source.rb'
+require './data_source'
 
 class Product < BasicObject
   def initialize(id)
