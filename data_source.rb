@@ -38,8 +38,9 @@ class DataSource
                              password: 'postgres', 
                              dbname: 'metapro_demo', 
                              port: '5432')
+
     pg_result = connection.exec <<-SQL
-      select #{column_name} from #{table_name} where id = #{id}
+      SELECT #{column_name} FROM #{table_name} WHERE id = #{id}
     SQL
   ensure
     connection.finish
