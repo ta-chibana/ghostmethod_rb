@@ -1,4 +1,4 @@
-require './data_source.rb'
+require './data_source'
 
 class Product < BasicObject
   def initialize(id)
@@ -6,14 +6,18 @@ class Product < BasicObject
     @data_source = ::DataSource.new
   end
 
-  def method_missing(source)
-    super unless @data_source.respond_to?("get_#{source}_name")
-    name = @data_source.send("get_#{source}_name", @id)
-    price = @data_source.send("get_#{source}_price", @id)
-    to_s(name, price)
+  def method_missing(method_name)
+    method_name.match(/^(\w*)_detail$/)
+    table_name = $1
+
+    super unless @data_source.respond_to?("fetch_#{table_name}_name")
+
+    product_name  = @data_source.send("fetch_#{table_name}_name", @id)
+    product_price = @data_source.send("fetch_#{table_name}_price", @id)
+    detail(product_name, product_price)
   end
 
-  def to_s(name, price)
+  def detail(name, price)
     if present?(name, price)
       "#{@id}: #{name} (￥#{price})"
     else

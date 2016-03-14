@@ -1,4 +1,4 @@
-require './data_source.rb'
+require './data_source'
 
 class Product
   def initialize(id)
@@ -6,20 +6,20 @@ class Product
     @data_source = DataSource.new
   end
 
-  def food
-    name = @data_source.get_food_name(@id)
-    price = @data_source.get_food_price(@id)
-    to_s(name, price)
+  def food_detail
+    food_name  = @data_source.fetch_food_name(@id)
+    food_price = @data_source.fetch_food_price(@id)
+    detail(food_name, food_price)
   end
 
-  def book
-    name = @data_source.get_book_name(@id)
-    price = @data_source.get_book_price(@id)
-    to_s(name, price)
+  def book_detail
+    book_name  = @data_source.fetch_book_name(@id)
+    book_price = @data_source.fetch_book_price(@id)
+    detail(book_name, book_price)
   end
 
   private
-  def to_s(name, price)
+  def detail(name, price)
     if present?(name, price)
       "#{@id}: #{name} (￥#{price})"
     else
