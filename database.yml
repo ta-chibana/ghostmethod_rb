@@ -1,0 +1,8 @@
+db:
+  development:
+    host: localhost
+    user: postgres
+    password: postgres
+    dbname: metapro_demo
+    port: 5432
+

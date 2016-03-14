@@ -33,11 +33,12 @@ class DataSource
 
   private
   def fetch_data!(table_name, column_name, id)
-    connection = PG::connect(host: 'localhost', 
-                             user: 'postgres', 
-                             password: 'postgres', 
-                             dbname: 'metapro_demo', 
-                             port: '5432')
+    db_conf = YAML.load_file('./database.yml')['db']['development']
+    connection = PG::connect(host: db_conf['host'], 
+                             user: db_conf['user'], 
+                             password: db_conf['password'], 
+                             dbname: db_conf['dbname'], 
+                             port: db_conf['port'])
 
     pg_result = connection.exec <<-SQL
       SELECT #{column_name} FROM #{table_name} WHERE id = #{id}
@@ -55,3 +56,4 @@ class DataSource
     data.respond_to?(:first) && !(data.first.nil?)
   end
 end
+
