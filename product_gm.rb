@@ -7,6 +7,8 @@ class Product < BasicObject
     @data_source = ::DataSource.new
   end
 
+  private
+
   def method_missing(method_name)
     table_name = to_table_name(method_name)
 
