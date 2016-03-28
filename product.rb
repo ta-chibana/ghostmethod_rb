@@ -1,6 +1,7 @@
 require './data_source'
 
 class Product
+
   def initialize(id)
     @id = id
     @data_source = DataSource.new
@@ -19,6 +20,7 @@ class Product
   end
 
   private
+
   def detail(name, price)
     if present?(name, price)
       "#{@id}: #{name} (￥#{price})"

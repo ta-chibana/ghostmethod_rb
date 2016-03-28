@@ -1,6 +1,7 @@
 require './data_source'
 
 class Product < BasicObject
+
   def initialize(id)
     @id = id
     @data_source = ::DataSource.new
