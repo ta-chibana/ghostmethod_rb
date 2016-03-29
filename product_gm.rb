@@ -10,21 +10,21 @@ class Product < BasicObject
   private
 
   def method_missing(method_name)
-    table_name = to_table_name(method_name)
+    product_type = to_product_type(method_name)
 
-    super unless @data_source.respond_to?("fetch_#{table_name}_name")
+    super unless @data_source.respond_to?("fetch_#{product_type}_name")
 
-    product_name  = @data_source.send("fetch_#{table_name}_name", @id)
-    product_price = @data_source.send("fetch_#{table_name}_price", @id)
-    detail(product_name, product_price)
+    product_name  = @data_source.send("fetch_#{product_type}_name", @id)
+    product_price = @data_source.send("fetch_#{product_type}_price", @id)
+    to_product_info(product_name, product_price)
   end
 
-  def to_table_name(method_name)
-    method_name.match(/^(\w*)_detail$/)
+  def to_product_type(method_name)
+    method_name.match(/\Afetch_(\w*)_info\z/)
     $1
   end
 
-  def detail(name, price)
+  def to_product_info(name, price)
     if present?(name, price)
       "#{@id}: #{name} (￥#{price})"
     else
@@ -32,7 +32,8 @@ class Product < BasicObject
     end
   end
 
-  def present?(*result)
-    result.all? { |data| !(data.nil?) }
+  def present?(*attributes)
+    attributes.all?
   end
 end
+

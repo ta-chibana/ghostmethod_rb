@@ -36,11 +36,11 @@ class DataSource
 
   def fetch_data!(table_name, column_name, id)
     db_conf = YAML.load_file('./database.yml')['db']['development']
-    connection = PG::connect(host: db_conf['host'], 
-                             user: db_conf['user'], 
-                             password: db_conf['password'], 
-                             dbname: db_conf['dbname'], 
-                             port: db_conf['port'])
+    connection = PG.connect(host: db_conf['host'], 
+                            user: db_conf['user'], 
+                            password: db_conf['password'], 
+                            dbname: db_conf['dbname'], 
+                            port: db_conf['port'])
 
     pg_result = connection.exec <<-SQL
       SELECT #{column_name} FROM #{table_name} WHERE id = #{id}
