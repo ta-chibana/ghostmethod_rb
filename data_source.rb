@@ -35,6 +35,17 @@ class DataSource
   private
 
   def fetch_data!(table_name, column_name, id)
+    connect_db do |connection|
+      safe_table_name  = connection.quote_ident(table_name)
+      safe_column_name = connection.quote_ident(column_name)
+
+      connection.exec <<-SQL
+        SELECT #{safe_column_name} FROM #{safe_table_name} WHERE id = #{id}
+      SQL
+    end
+  end
+
+  def connect_db!
     db_conf = YAML.load_file('./database.yml')['db']['development']
     connection = PG.connect(host: db_conf['host'], 
                             user: db_conf['user'], 
@@ -42,12 +53,7 @@ class DataSource
                             dbname: db_conf['dbname'], 
                             port: db_conf['port'])
 
-    safe_table_name  = connection.quote_ident(table_name)
-    safe_column_name = connection.quote_ident(column_name)
-
-    pg_result = connection.exec <<-SQL
-      SELECT #{safe_column_name} FROM #{safe_table_name} WHERE id = #{id}
-    SQL
+    pg_result = yield(connection)
   ensure
     connection.finish
     pg_result
