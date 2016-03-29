@@ -42,8 +42,11 @@ class DataSource
                             dbname: db_conf['dbname'], 
                             port: db_conf['port'])
 
+    safe_table_name  = connection.quote_ident(table_name)
+    safe_column_name = connection.quote_ident(column_name)
+
     pg_result = connection.exec <<-SQL
-      SELECT #{column_name} FROM #{table_name} WHERE id = #{id}
+      SELECT #{safe_column_name} FROM #{safe_table_name} WHERE id = #{id}
     SQL
   ensure
     connection.finish
