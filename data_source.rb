@@ -1,6 +1,7 @@
 require 'pg'
 
 class DataSource
+
   def fetch_food_name(id)
     pg_result = fetch_data!('foods', 'name', id)
     return_data(pg_result, 'name')
@@ -34,7 +35,7 @@ class DataSource
   private
 
   def fetch_data!(table_name, column_name, id)
-    connect_db do |connection|
+    connect_db! do |connection|
       safe_table_name  = connection.quote_ident(table_name)
       safe_column_name = connection.quote_ident(column_name)
 
