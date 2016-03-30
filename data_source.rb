@@ -1,7 +1,6 @@
 require 'pg'
 
 class DataSource
-
   def fetch_food_name(id)
     pg_result = fetch_data!('foods', 'name', id)
     return_data(pg_result, 'name')

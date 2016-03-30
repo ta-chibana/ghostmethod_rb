@@ -1,7 +1,6 @@
 require './data_source'
 
 class Product
-
   def initialize(id)
     @id = id
     @data_source = DataSource.new
