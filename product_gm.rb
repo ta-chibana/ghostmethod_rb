@@ -1,5 +1,7 @@
 require './data_source'
 
+# 1つの製品の情報を取得するクラス.
+# DataSourceクラスを利用して値を取得する.
 class Product < BasicObject
 
   def initialize(id)

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 require 'pg'
 
+# 様々な製品の情報を取得するクラス.
+# 1つのレコードから1つのカラムの情報を取得する.
 class DataSource
 
   FOOD_TABLE_NAME = 'foods'
