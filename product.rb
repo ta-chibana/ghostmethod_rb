@@ -22,14 +22,14 @@ class Product
   private
 
   def to_product_info(name, price)
-    if present?(name, price)
+    if is_present?(name, price)
       "#{@id}: #{name} (￥#{price})"
     else
       'nothing...'
     end
   end
 
-  def present?(*attributes)
+  def is_present?(*attributes)
     attributes.all?
   end
 end

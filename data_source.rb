@@ -51,17 +51,17 @@ class DataSource
                             dbname: db_conf['dbname'], 
                             port: db_conf['port'])
 
-    pg_result = yield(connection)
+    fetched_data = yield(connection)
   ensure
     connection.finish
-    pg_result
+    fetched_data
   end
 
-  def return_data(data, column_name)
-    data.first[column_name] if present?(data)
+  def return_data(fetched_data, column_name)
+    fetched_data.first[column_name] if is_present?(fetched_data)
   end
 
-  def present?(data)
+  def is_present?(data)
     data.respond_to?(:first) && !(data.first.nil?)
   end
 end
