@@ -27,11 +27,8 @@ class Product < BasicObject
   end
 
   def to_product_info(name, price)
-    if is_present?(name, price)
-      "#{@id}: #{name} (￥#{price})"
-    else
-      'nothing...'
-    end
+    product_info = -> { "#{@id}: #{name} (￥#{price})" }
+    is_present?(name, price) ? product_info.call : 'nothing...'
   end
 
   def is_present?(*attributes)
