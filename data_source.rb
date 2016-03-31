@@ -1,36 +1,34 @@
+# frozen_string_literal: true
 require 'pg'
 
 class DataSource
 
+  FOOD_TABLE_NAME = 'foods'
+  BOOK_TABLE_NAME = 'books'
+  PRODUCT_NAME_COLUMN = 'name'
+  PRODUCT_PRICE_COLUMN = 'price'
+
+  DB_CONF_FILE_PATH = './database.yml'
+
   def fetch_food_name(id)
-    pg_result = fetch_data!('foods', 'name', id)
-    return_data(pg_result, 'name')
+    pg_result = fetch_data!(FOOD_TABLE_NAME, PRODUCT_NAME_COLUMN, id)
+    return_data(pg_result, PRODUCT_NAME_COLUMN)
   end
 
   def fetch_food_price(id)
-    pg_result = fetch_data!('foods', 'price', id)
-    return_data(pg_result, 'price')
+    pg_result = fetch_data!(FOOD_TABLE_NAME, PRODUCT_PRICE_COLUMN, id)
+    return_data(pg_result, PRODUCT_PRICE_COLUMN)
   end
 
   def fetch_book_name(id)
-    pg_result = fetch_data!('books', 'name', id)
-    return_data(pg_result, 'name')
+    pg_result = fetch_data!(BOOK_TABLE_NAME, PRODUCT_NAME_COLUMN, id)
+    return_data(pg_result, PRODUCT_NAME_COLUMN)
   end
 
   def fetch_book_price(id)
-    pg_result = fetch_data!('books', 'price', id)
-    return_data(pg_result, 'price')
+    pg_result = fetch_data!(BOOK_TABLE_NAME, PRODUCT_PRICE_COLUMN, id)
+    return_data(pg_result, PRODUCT_PRICE_COLUMN)
   end
-
-  #  def fetch_onigiri_name(id)
-  #    pg_result = fetch_data!('onigiris', 'name', id)
-  #    return_data(pg_result, 'name')
-  #  end
-  #
-  #  def fetch_onigiri_price(id)
-  #    pg_result = fetch_data!('onigiris', 'price', id)
-  #    return_data(pg_result, 'price')
-  #  end
 
   private
 
@@ -46,7 +44,7 @@ class DataSource
   end
 
   def connect_db!
-    db_conf = YAML.load_file('./database.yml')['db']['development']
+    db_conf = YAML.load_file(DB_CONF_FILE_PATH)['db']['development']
     connection = PG.connect(host: db_conf['host'], 
                             user: db_conf['user'], 
                             password: db_conf['password'], 
