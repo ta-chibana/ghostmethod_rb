@@ -10,6 +10,24 @@ class Product < BasicObject
 
   private
 
+  # Productクラスが持たないメソッド呼び出しをフックする.
+  # メソッド名が /\Afetch_(\w*)_info\z/ にマッチすると,
+  # (\w*)にマッチした部分に応じて
+  # DataSourceクラスに定義された各メソッドを呼び出し,製品の情報を返す.
+  # DataSourceクラスに定義されていないメソッドが呼ばれる場合,
+  # NoMethodErrorを発生させる.
+  #
+  # Example
+  #  class DataSource
+  #    def fetch_food_name; end
+  #    def fetch_food_price; end
+  #  end
+  #  
+  #  pro = Product.new(id)
+  #  pro.fetch_food_name
+  #   => DataSource#fetch_food_name, DataSource#fetch_food_price を呼び出す.
+  #  pro.fetch_drink_name
+  #   => raise NoMethodError
   def method_missing(method_name)
     data_source = ::DataSource.new
     product_type = to_product_type(method_name)
