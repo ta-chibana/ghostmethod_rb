@@ -1,33 +1,36 @@
 require './data_source'
 
+# 1つの製品の情報を取得するクラス.
+# DataSourceクラスを利用して値を取得する.
 class Product
+
   def initialize(id)
     @id = id
-    @data_source = DataSource.new
   end
 
-  def food_detail
-    food_name  = @data_source.fetch_food_name(@id)
-    food_price = @data_source.fetch_food_price(@id)
-    detail(food_name, food_price)
+  def fetch_food_info
+    data_source = DataSource.new
+    food_name  = data_source.fetch_food_name(@id)
+    food_price = data_source.fetch_food_price(@id)
+    to_product_info(food_name, food_price)
   end
 
-  def book_detail
-    book_name  = @data_source.fetch_book_name(@id)
-    book_price = @data_source.fetch_book_price(@id)
-    detail(book_name, book_price)
+  def fetch_book_info
+    data_source = DataSource.new
+    book_name  = data_source.fetch_book_name(@id)
+    book_price = data_source.fetch_book_price(@id)
+    to_product_info(book_name, book_price)
   end
 
   private
-  def detail(name, price)
-    if present?(name, price)
-      "#{@id}: #{name} (￥#{price})"
-    else
-      'nothing...'
-    end
+
+  def to_product_info(name, price)
+    product_info = -> { "#{@id}: #{name} (￥#{price})" }
+    is_present?(name, price) ? product_info.call : 'nothing...'
   end
 
-  def present?(*result)
-    result.all? { |data| !(data.nil?) }
+  def is_present?(*attributes)
+    attributes.all?
   end
 end
+
