@@ -1,54 +1,70 @@
+# frozen_string_literal: true
 require 'pg'
 
+# 様々な製品の情報を取得するクラス.
+# 1つのレコードから1つのカラムの情報を取得する.
 class DataSource
-  def get_food_name(id)
-    result = get_data('foods', 'name', id)
-    return_data(result, 'name')
+
+  FOOD_TABLE_NAME = 'foods'
+  BOOK_TABLE_NAME = 'books'
+  PRODUCT_NAME_COLUMN = 'name'
+  PRODUCT_PRICE_COLUMN = 'price'
+
+  DB_CONF_FILE_PATH = './database.yml'
+
+  def fetch_food_name(id)
+    pg_result = fetch_data!(FOOD_TABLE_NAME, PRODUCT_NAME_COLUMN, id)
+    return_data(pg_result, PRODUCT_NAME_COLUMN)
   end
 
-  def get_food_price(id)
-    result = get_data('foods', 'price', id)
-    return_data(result, 'price')
+  def fetch_food_price(id)
+    pg_result = fetch_data!(FOOD_TABLE_NAME, PRODUCT_PRICE_COLUMN, id)
+    return_data(pg_result, PRODUCT_PRICE_COLUMN)
   end
 
-  def get_book_name(id)
-    result = get_data('books', 'name', id)
-    return_data(result, 'name')
+  def fetch_book_name(id)
+    pg_result = fetch_data!(BOOK_TABLE_NAME, PRODUCT_NAME_COLUMN, id)
+    return_data(pg_result, PRODUCT_NAME_COLUMN)
   end
 
-  def get_book_price(id)
-    result = get_data('books', 'price', id)
-    return_data(result, 'price')
+  def fetch_book_price(id)
+    pg_result = fetch_data!(BOOK_TABLE_NAME, PRODUCT_PRICE_COLUMN, id)
+    return_data(pg_result, PRODUCT_PRICE_COLUMN)
   end
-
-  #  def get_onigiri_name(id)
-  #    result = get_data('onigiris', 'name', id)
-  #    return_data(result, 'name')
-  #  end
-  #
-  #  def get_onigiri_price(id)
-  #    result = get_data('onigiris', 'price', id)
-  #    return_data(result, 'price')
-  #  end
 
   private
-  def get_data(table_name, column, id)
-    connection = PG::connect(host: 'localhost', 
-                             user: 'postgres', 
-                             password: 'postgres', 
-                             dbname: 'metapro_demo', 
-                             port: '5432')
-    result = connection.exec("select #{column} from #{table_name} where id = #{id}")
+
+  def fetch_data!(table_name, column_name, id)
+    connect_db! do |connection|
+      safe_table_name  = connection.quote_ident(table_name)
+      safe_column_name = connection.quote_ident(column_name)
+
+      connection.exec <<-SQL
+        SELECT #{safe_column_name} FROM #{safe_table_name} WHERE id = #{id}
+      SQL
+    end
+  end
+
+  def connect_db!
+    db_conf = YAML.load_file(DB_CONF_FILE_PATH)['db']['development']
+    connection = PG.connect(host: db_conf['host'], 
+                            user: db_conf['user'], 
+                            password: db_conf['password'], 
+                            dbname: db_conf['dbname'], 
+                            port: db_conf['port'])
+
+    fetched_data = yield(connection)
   ensure
     connection.finish
-    result
+    fetched_data
   end
 
-  def return_data(data, column)
-    data.first[column] if present?(data)
+  def return_data(fetched_data, column_name)
+    fetched_data.first[column_name] if is_present?(fetched_data)
   end
 
-  def present?(data)
+  def is_present?(data)
     data.respond_to?(:first) && !(data.first.nil?)
   end
 end
+
